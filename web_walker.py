@@ -50,29 +50,32 @@ class WebWalker():
         self._click_search()
 
     def _open_details(self, band_name: str, song_title: str) -> None:
-        WebDriverWait(self._driver, 120).until(EC.presence_of_element_located(SONGS_COUNTER_SELECTOR))
-        elements_counter = self._driver.find_element(*SONGS_COUNTER_SELECTOR).text
+        try:
+            WebDriverWait(self._driver, 120).until(EC.presence_of_element_located(SONGS_COUNTER_SELECTOR))
+            elements_counter = self._driver.find_element(*SONGS_COUNTER_SELECTOR).text
 
-        if not os.path.exists('screenshots'):
-            os.mkdir('screenshots')
+            if not os.path.exists('screenshots'):
+                os.mkdir('screenshots')
 
-        self._driver.save_screenshot(f'screenshots/screenshot - {band_name} - {song_title}.png')
+            self._driver.save_screenshot(f'screenshots/screenshot - {band_name} - {song_title}.png')
 
-        if '1' in elements_counter:
-            self._driver.find_element(*DETAILS_BOX_SELECTOR).click()
-            WebDriverWait(self._driver, 20).until(EC.presence_of_element_located(ARTISTS_SELECTOR))
-            self._driver.find_element(*ARTISTS_SELECTOR).click()
-            self._driver.save_screenshot(f'screenshots/screenshot - {band_name} - {song_title} - details.png')
-        elif '0' in elements_counter:
-            print(f'nie znaleziono')
-            with open('not found.txt', 'a+', encoding='utf-8') as f:
-                f.write(f'{band_name} - {song_title}: nie znaleiono\n')
-            self.not_found.append(f'{band_name} - {song_title}')
-        else:
-            print('znaleziono zbyt wiele pasujących elementów')
-            with open('not found.txt', 'a+', encoding='utf-8') as f:
-                f.write(f'{band_name} - {song_title}: znaleziono zbyt wiele pasujących elementów\n')
-            self.found_many.append(f'{band_name} - {song_title}')
+            if '1' in elements_counter:
+                self._driver.find_element(*DETAILS_BOX_SELECTOR).click()
+                WebDriverWait(self._driver, 20).until(EC.presence_of_element_located(ARTISTS_SELECTOR))
+                self._driver.find_element(*ARTISTS_SELECTOR).click()
+                self._driver.save_screenshot(f'screenshots/screenshot - {band_name} - {song_title} - details.png')
+            elif '0' in elements_counter:
+                print(f'nie znaleziono')
+                with open('not found.txt', 'a+', encoding='utf-8') as f:
+                    f.write(f'{band_name} - {song_title}: nie znaleiono\n')
+                self.not_found.append(f'{band_name} - {song_title}')
+            else:
+                print('znaleziono zbyt wiele pasujących elementów')
+                with open('not found.txt', 'a+', encoding='utf-8') as f:
+                    f.write(f'{band_name} - {song_title}: znaleziono zbyt wiele pasujących elementów\n')
+                self.found_many.append(f'{band_name} - {song_title}')
+        except Exception as e:
+            print(f'Wystąpił problem: {e}')
 
     def _read_zaiks(self) -> str:
         potential_zaiks_numbers = self._driver.find_elements(*ZAIKS_NUMBER_SELECTOR)

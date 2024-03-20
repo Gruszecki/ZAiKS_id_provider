@@ -45,7 +45,10 @@ def find_em_all(path):
         if band_name and song_title:
             ww.open_chrome()
             try:
-                zaiks = ww.get_id(band_name=band_name, song_title=song_title)
+                if len(song) > 60:
+                    zaiks = ww.get_id(band_name=band_name, song_title=song_title[:60])
+                else:
+                    zaiks = ww.get_id(band_name=band_name, song_title=song_title)
                 tag_walker.set_zaiks(song, zaiks)
             except Exception as e:
                 print(e)
