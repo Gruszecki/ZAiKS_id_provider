@@ -19,7 +19,7 @@ class App(QWidget):
         self.button1.clicked.connect(self.select_folder)
 
         self.button2 = QPushButton('Start', self)
-        self.button2.clicked.connect(find_em_all)
+        self.button2.clicked.connect(lambda: find_em_all(self.folder_path))
 
         self.layout.addWidget(self.button1)
         self.layout.addWidget(self.button2)

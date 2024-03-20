@@ -5,8 +5,6 @@ import re
 import tag_walker
 from web_walker import WebWalker
 
-ww = WebWalker()
-
 
 def get_audio_files(directory=None, extensions=['.mp3']):
     if not directory:
@@ -26,6 +24,8 @@ def verify_zaiks_structure(zaiks):
 
 
 def find_em_all(path):
+    ww = WebWalker()
+
     audio_files = get_audio_files(path)
 
     for song in audio_files:
@@ -50,9 +50,8 @@ def find_em_all(path):
             except Exception as e:
                 print(e)
                 with open('not found.txt', 'a+', encoding='utf-8') as f:
-                    f.write(f'{band_name} - {song_title}: wystąpił problem')
+                    f.write(f'{band_name} - {song_title}: wystąpił problem\n')
         else:
             print(f'No tags for {song}')
             with open('not found.txt', 'a+', encoding='utf-8') as f:
-                f.write(f'No tags for {song}')
-
+                f.write(f'No tags for {song}\n')
